@@ -1,3 +1,12 @@
 使用するネットワークの定義は ./bird_view/models/model_supervised.py に記述されている。
 使用するエージェントの定義は ./bird_view/models/agent_IAs_RL.py に記述されている
-エージェントの宣言とargは ./benchmark_agent.py に記述されている
+エージェントの宣言とargは ./benchmark_agent.py に記述されている。　なお、使用した環境(makw_suite関数、ベンチマーク時にenvとして扱われる)は ./benchmark/goal_suite.py に記載
+
+
+今回使用されているネットワークの初期化は以下の通り（Model_Segmentation_Traffic_Light_Supervised）
+nb_images_input・nb_images_output : len([-10,-2,-1,0]) ・・・取得するフレームの秒数（1秒前、0.2秒前、、、）
+hidden_size : 1024
+nb_class_segmentation : 6
+nb_class_dist_to_tl : 4
+crop_sky=False,
+ 
