@@ -45,6 +45,8 @@ class Model_Segmentation_Traffic_Light_Supervised(nn.Module):
         nb_class_dist_to_tl,
         crop_sky=False,
     ):
+        #nb_images_inputは使用するフレームの数。先行研究では1秒前、0.2秒前、0.1秒前、0秒前のフレームが使用されている
+        #nb_images_input,nb_images_output,は4となっている
         super().__init__()
         if crop_sky:
             self.size_state_RL = 6144
@@ -86,6 +88,7 @@ class Model_Segmentation_Traffic_Light_Supervised(nn.Module):
         self.encoder = torch.nn.Sequential(
             *(list(resnet18.children())[:-2])
         )  # resnet18_no_fc_no_avgpool
+           #最後から２番目までの層（AdaptiveAvgpoolとLinear）を消している（conv,batchnom,relu,conv,batchnormのひとかたまりがBasicBlock）
         self.last_conv_downsample = nn.Sequential(
             nn.Conv2d(512, 512, kernel_size=(2, 2), stride=(2, 2), bias=False),
             nn.BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True),
@@ -163,3 +166,11 @@ class Model_Segmentation_Traffic_Light_Supervised(nn.Module):
         delta_position_yaw_output = self.fc2_delta_y_yaw_camera(delta_position_yaw_state)
 
         return out_seg, classif_output, state_output, dist_to_tl_output, delta_position_yaw_output
+        '''
+        out_seg・・・nb_class_segmentation(セグメンテーションのクラス数)*画像の大きさ（デフォルトでは128*128!）
+        classis_output・・・4次元 （デフォルトではUS信号、EU信号、交差点、それ以外の4つ）
+        state_output・・・2次元 赤か、赤以外か。
+        dit_to_tl_output・・・4次元、 信号までの距離を4段階で分類している
+        delta_posiition_yaw_output・・・2*nb_images_output !!!4枚の画像に対してそれぞれ角度と中心からの距離を出している!!!
+        '''
+
