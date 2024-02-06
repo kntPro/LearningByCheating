@@ -1,0 +1,3 @@
+使用するネットワークの定義は ./bird_view/models/model_supervised.py に記述されている。
+使用するエージェントの定義は ./bird_view/models/agent_IAs_RL.py に記述されている
+エージェントの宣言とargは ./benchmark_agent.py に記述されている
